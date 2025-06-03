@@ -9,6 +9,7 @@ export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
     logger.info('生命周期','Ability onCreate');
+    AppStorage.setOrCreate('context', this.context)
   }
 
   onDestroy(): void {
