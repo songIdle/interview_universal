@@ -1,7 +1,6 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
-import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { logger } from '../commons/utils/LoggerUtil';
+import { logger } from '../commons/utils';
 
 const DOMAIN = 0x0000;
 

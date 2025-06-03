@@ -1,4 +1,5 @@
-import { fullScreen } from '../commons/utils/FullScreenUtil';
+import { fullScreen } from '../commons/utils/';
+
 
 @Entry
 @Component
