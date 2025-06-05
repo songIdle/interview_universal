@@ -1,5 +1,6 @@
 import { HcTag } from "../../commons/components/HcTag"
 import { QuestionItemComp } from "../../commons/components/QuestionItemComp"
+import { QuestionListComp } from "../../commons/components/QuestionListComp"
 import { QuestionType } from "../../models/QuestionType"
 
 @Component
@@ -12,14 +13,7 @@ export struct HomeCategory {
     Tabs({ index: this.activeIndex }) {
       ForEach(this.questionTypeList, (item: QuestionType, i) => {
         TabContent() {
-          QuestionItemComp({data:{
-            id: '100',
-            stem: '请说下ArkUI的容器组件有哪些？',
-            difficulty: 3,
-            likeCount: 23,
-            views: 423,
-            readFlag: 1
-          }})
+          QuestionListComp()
         }
         .tabBar(this.TabBarBuilder(item,i))
       })
