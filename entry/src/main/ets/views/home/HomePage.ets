@@ -39,6 +39,11 @@ export struct HomePage{
       .itemHeight(4)
       .selectedItemHeight(4)
       .selectedColor($r('app.color.white')))
+
+
+
+
+
       Column(){
         HomeCategory()
       }

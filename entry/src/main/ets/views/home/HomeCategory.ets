@@ -13,6 +13,7 @@ export struct HomeCategory {
   @State isShow: boolean = false
   @State filterDataIndex: number = 0
   @State filterDataSort:SortType=SortType.Default
+  @State sort:SortType=SortType.Default
 
   async aboutToAppear() {
     const res=await http.request<QuestionType[]>({
@@ -26,13 +27,14 @@ export struct HomeCategory {
       Tabs({ index: this.activeIndex }) {
         ForEach(this.questionTypeList, (item: QuestionType, i) => {
           TabContent() {
-            QuestionListComp({typeId:item.id})
+            QuestionListComp({typeId:item.id,sortType:this.sort})
           }
           .tabBar(this.TabBarBuilder(item,i))
         })
       }
       .onTabBarClick((i) => {
         this.activeIndex = i
+        this.filterDataIndex=i
       })
       .barMode(BarMode.Scrollable)
       .barHeight(44)
@@ -92,6 +94,10 @@ export struct HomeCategory {
           .fontSize(16)
           .fontWeight(500)
           .fontColor($r('app.color.common_gray_03'))
+          .onClick(() => {
+            this.filterDataIndex=0
+            this.filterDataSort=SortType.Default
+          })
         Text('筛选题目')
           .layoutWeight(1)
           .fontSize(18)
@@ -104,6 +110,7 @@ export struct HomeCategory {
           .onClick(() => {
             this.isShow=false
             this.activeIndex=this.filterDataIndex
+            this.sort=this.filterDataSort
           })
       }
       .margin({ bottom: 4, top: 4 })
