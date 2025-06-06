@@ -90,3 +90,12 @@ export enum PlanSceneName {
   随堂测试 = "随堂测试",
   随堂练习 = "随堂练习",
 }
+
+export enum SortType {
+  Default = 0,
+  DifficultyLow = 10,
+  DifficultyHigh = 11,
+  ViewLow = 20,
+  ViewHigh = 21,
+  Commend = 30
+}
