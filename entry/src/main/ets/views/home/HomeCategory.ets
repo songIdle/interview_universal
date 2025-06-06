@@ -1,19 +1,26 @@
 import { HcTag } from "../../commons/components/HcTag"
 import { QuestionItemComp } from "../../commons/components/QuestionItemComp"
 import { QuestionListComp } from "../../commons/components/QuestionListComp"
+import { http } from "../../commons/utils/Http"
 import { QuestionType } from "../../models/QuestionType"
 
 @Component
 export struct HomeCategory {
-  @State questionTypeList: QuestionType[] = mockData
+  @State questionTypeList: QuestionType[] = []
   @State activeIndex: number = 0
 
+  async aboutToAppear() {
+    const res=await http.request<QuestionType[]>({
+      url:'question/type'
+    })
+    this.questionTypeList=res
+  }
 
   build() {
     Tabs({ index: this.activeIndex }) {
       ForEach(this.questionTypeList, (item: QuestionType, i) => {
         TabContent() {
-          QuestionListComp()
+          QuestionListComp({typeId:item.id})
         }
         .tabBar(this.TabBarBuilder(item,i))
       })
@@ -53,14 +60,3 @@ export struct HomeCategory {
   }
 }
 
-
-const mockData: QuestionType[] = [
-  { id: 1, name: 'ArkTS', displayNewestFlag: 0 },
-  { id: 2, name: 'ArkUI', displayNewestFlag: 1 },
-  { id: 3, name: 'Hap', displayNewestFlag: 1 },
-  { id: 4, name: 'Hsp', displayNewestFlag: 0 },
-  { id: 5, name: 'Har', displayNewestFlag: 0 },
-  { id: 6, name: 'Ability', displayNewestFlag: 0 },
-  { id: 7, name: 'Stage', displayNewestFlag: 0 },
-  { id: 8, name: 'Kit', displayNewestFlag: 0 }
-]

@@ -1,8 +1,11 @@
-import { QuestionItem } from "../../models/QuestionItem"
+import { QuestionItem, QuestionListType } from "../../models/QuestionItem"
+import { http } from "../utils/Http"
 import { QuestionItemComp } from "./QuestionItemComp"
 
 @Component
 export struct QuestionListComp {
+
+  typeId:number=0
   @State list: QuestionItem[] = []
   @State isRefreshing: boolean = false
 
@@ -10,6 +13,9 @@ export struct QuestionListComp {
   isLoading :boolean=false
   @State
   isFinished :boolean=false
+
+  pageNum:number=1
+
   build() {
     Refresh({ refreshing: $$this.isRefreshing }) {
       List() {
@@ -68,30 +74,39 @@ export struct QuestionListComp {
     })
 
   }
-  onLoading(){
-    if (this.list.length<40) {
-      setTimeout(() => {
-        this.isLoading=false
-        for (let i = 0; i < 10; i++) {
-          this.list.push({
-            id: '100',
-            stem: '请说下ArkUI的容器组件有哪些？',
-            difficulty: 3,
-            likeCount: i,
-            views: 423,
-            readFlag: 1
-          })
-        }
-      }, 1000)
-    }else {
+  async onLoading(){
+    const res=await this.getListData()
+    this.list.push(...res.rows!!)
+    this.isLoading=false
+    if (res.pageTotal==this.pageNum) {
       this.isFinished=true
+    }else {
+      this.pageNum++
     }
   }
 
-  onRefresh() {
-    setTimeout(() => {
-      this.isRefreshing = false
-      this.isFinished = false
-    }, 1000)
+  async getListData(){
+    return await http.request<QuestionListType>({
+      url:'question/list',
+      params:{
+        questionBankType:10,
+        type:this.typeId,
+        pageSize:10,
+        page:this.pageNum
+      }
+    })
+  }
+
+  async onRefresh() {
+    this.isFinished = false
+    this.pageNum=1
+    const res=await this.getListData()
+    this.list=res.rows!!
+    this.isRefreshing=false
+    if (res.pageTotal==this.pageNum) {
+      this.isFinished=true
+    }else {
+      this.pageNum++
+    }
   }
 }
