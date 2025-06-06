@@ -20,7 +20,7 @@ struct Index {
   navigationHeight:number=0
 
   @State
-  currentTabIndex:number=0
+  currentTabIndex:number=3
   // struct Index 数据
   tabList: TabItem[] = [
     {
