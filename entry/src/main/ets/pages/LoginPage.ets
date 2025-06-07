@@ -2,6 +2,7 @@ import { HcNavBar } from '../commons/components/HcNavBar'
 import { promptAction, router } from '@kit.ArkUI'
 import { LoginParams, User } from '../models/User'
 import { http } from '../commons/utils/Http'
+import { auth } from '../commons/utils/AuthUtils'
 
 
 @Entry
@@ -43,7 +44,7 @@ struct LoginPage {
         }
       })
       this.loading = false
-      AppStorage.setOrCreate<User>('user', user)
+      auth.setUser(user)
       router.back()
     } catch (err) {
       this.loading = false

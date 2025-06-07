@@ -1,4 +1,4 @@
-import { fullScreen } from '../commons/utils/';
+import { auth, fullScreen } from '../commons/utils/';
 import { HomePage } from '../views/home/HomePage';
 import { InterviewPage } from '../views/interview/InterviewPage';
 import { MyPage } from '../views/my/MyPage';
@@ -11,6 +11,7 @@ interface TabItem {
   name: string;
 }
 
+auth.initUser()
 
 
 @Entry
