@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "@ohos/axios";
-
+import { logger } from ".";
 
 
 const instance=axios.create({
@@ -8,9 +8,11 @@ const instance=axios.create({
 })
 
 instance.interceptors.response.use((response:AxiosResponse)=>{
-  if (response.data.code>200) {
+  if (response.data.code==10000) {
+    logger.debug('Req Success', JSON.stringify(response.data.data))
     return Promise.resolve(response.data.data)
   }else {
+    logger.error('Req Error', JSON.stringify(response.data))
     return Promise.reject(response.data.message)
   }
 },(err:string)=>{

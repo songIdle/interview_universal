@@ -1,7 +1,8 @@
 
 import { router } from '@kit.ArkUI'
 import { ClockInIcon } from '../../commons/components/ClockInIcon'
-import { fullScreen, statusBar } from '../../commons/utils'
+import { formatTime, statusBar } from '../../commons/utils'
+import { User } from '../../models/User'
 
 interface Nav {
   icon: ResourceStr
@@ -21,7 +22,8 @@ interface Tool {
 export struct MyPage {
   @StorageProp('topHeight')
   topHeight: number = 0
-
+  @StorageProp('user')
+  user: User = {} as User
   aboutToDisappear(): void {
     statusBar.setDarkBar()
   }
@@ -96,15 +98,15 @@ export struct MyPage {
   build() {
     Column({ space: 16 }) {
       Row({ space: 12 }) {
-        Image($r('app.media.ic_mine_avatar'))
+        Image(this.user.avatar || $r('app.media.ic_mine_avatar'))
           .alt($r('app.media.ic_mine_avatar'))
           .width(55)
           .aspectRatio(1)
           .borderRadius(55)
         // 是否登录
-        if (false) {
+        if (this.user.token) {
           Column({ space: 4 }) {
-            Text('用户名')
+            Text(this.user.nickName || this.user.username)
               .fontSize(18)
               .fontWeight(500)
               .maxLines(1)
@@ -158,7 +160,7 @@ export struct MyPage {
         this.navBuilder({
           icon: $r('app.media.ic_mine_study'),
           name: '累计学时',
-          other: '10小时',
+          other: formatTime(this.user.totalTime),
           onClick: () => {
             // TODO
           }

@@ -1,4 +1,8 @@
 import { HcNavBar } from '../commons/components/HcNavBar'
+import { promptAction, router } from '@kit.ArkUI'
+import { LoginParams, User } from '../models/User'
+import { http } from '../commons/utils/Http'
+
 
 @Entry
 @Component
@@ -6,13 +10,47 @@ struct LoginPage {
   @StorageProp('topHeight')
   topHeight: number = 0
   @State
-  mobile: string = 'hmheima'
+  username: string = 'hmheima'
   @State
-  code: string = 'Hmheima%123'
+  password: string = 'Hmheima%123'
   @State
   isAgree: boolean = false
   @State
   loading: boolean = false
+
+  async login() {
+    if (this.loading) {
+      return
+    }
+    if (!this.username) {
+      return promptAction.showToast({ message: '请输入用户名' })
+    }
+    if (!this.password) {
+      return promptAction.showToast({ message: '请输入密码' })
+    }
+    if (!this.isAgree) {
+      return promptAction.showToast({ message: '请勾选已阅读并同意' })
+    }
+
+    try {
+      this.loading = true
+      const user = await http.requestWithData<User, LoginParams>({
+        url: 'login',
+        method: 'post',
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      })
+      this.loading = false
+      AppStorage.setOrCreate<User>('user', user)
+      router.back()
+    } catch (err) {
+      this.loading = false
+      promptAction.showToast({ message: err as string })
+    }
+  }
+
 
   build() {
     Column() {
@@ -31,9 +69,9 @@ struct LoginPage {
       .padding(16)
 
       Column({ space: 15 }) {
-        TextInput({ placeholder: '请输入用户名', text: $$this.mobile })
+        TextInput({ placeholder: '请输入用户名', text: $$this.username })
           .customStyle()
-        TextInput({ placeholder: '请输入密码', text: $$this.code })
+        TextInput({ placeholder: '请输入密码', text: $$this.password })
           .type(InputType.Password)
           .showPasswordIcon(false)
           .customStyle()
@@ -85,7 +123,7 @@ struct LoginPage {
         })
         .stateEffect(false)
         .onClick(() => {
-          // TODO
+          this.login()
         })
       }
       .padding({ left: 36, right: 36, top: 30 })
@@ -102,6 +140,7 @@ struct LoginPage {
     .width('100%')
     .height('100%')
   }
+
 }
 
 @Extend(TextInput)
