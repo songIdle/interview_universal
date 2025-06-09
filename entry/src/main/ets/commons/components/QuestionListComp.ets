@@ -1,4 +1,5 @@
 import { QuestionItem, QuestionListType, SortType } from "../../models/QuestionItem"
+import { auth } from "../utils"
 import { http } from "../utils/Http"
 import { QuestionItemComp } from "./QuestionItemComp"
 import { Skeleton } from "./Skeleton"
@@ -33,6 +34,9 @@ export struct QuestionListComp {
           ForEach(this.list, (item:QuestionItem) => {
             ListItem() {
               QuestionItemComp({data:item})
+                .onClick(()=>{
+                  auth.checkAuth({url:'pages/QuestionDetailPage'})
+                })
             }
           })
 

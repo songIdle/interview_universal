@@ -48,7 +48,13 @@ struct LoginPage {
       this.loading = false
       auth.setUser(user)
       emitter.emit(LOGIN_EVENT)
-      router.back()
+
+      const params=router.getParams() as router.RouterOptions
+      if ( params) {
+        router.replaceUrl(params)
+      }else {
+        router.back()
+      }
     } catch (err) {
       this.loading = false
       promptAction.showToast({ message: err as string })
@@ -95,12 +101,24 @@ struct LoginPage {
           Text('用户协议')
             .fontSize(14)
             .padding({ right: 4 })
+            .onClick(() => {
+              router.pushUrl({ url: 'pages/WebPage',params:{
+                url:'http://110.41.143.89/user',
+                title:'用户协议'
+              }})
+            })
           Text('和')
             .fontSize(14)
             .fontColor($r('app.color.common_gray_01'))
             .padding({ right: 4 })
           Text('隐私政策')
             .fontSize(14)
+            .onClick(() => {
+              router.pushUrl({ url: 'pages/WebPage',params:{
+                url:'http://110.41.143.89/privacy',
+                title:'隐私政策'
+              }})
+            })
         }
         .width('100%')
 

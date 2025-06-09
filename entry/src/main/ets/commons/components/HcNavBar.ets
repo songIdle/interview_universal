@@ -2,7 +2,7 @@ import { router } from '@kit.ArkUI'
 
 @Component
 export struct HcNavBar {
-  @StorageProp('topHeight')
+  @StorageProp('statusBarHeight')
   topHeight: number = 0
   // 标题文字
   @Prop
