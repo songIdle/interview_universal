@@ -1,3 +1,4 @@
+//自定义弹窗装饰器
 @CustomDialog
 export struct HcLoadingDialog {
   controller: CustomDialogController

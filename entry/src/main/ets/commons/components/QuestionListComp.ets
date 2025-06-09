@@ -31,12 +31,14 @@ export struct QuestionListComp {
     }else {
       Refresh({ refreshing: $$this.isRefreshing }) {
         List() {
-          ForEach(this.list, (item:QuestionItem) => {
+          ForEach(this.list, (item:QuestionItem,index:number) => {
             ListItem() {
               QuestionItemComp({data:item})
                 .onClick(()=>{
                   auth.checkAuth({url:'pages/QuestionDetailPage',params:{
-                    data:item
+                    item:item,
+                    currentIndex:index,
+                    list:this.list
                   }})
                 })
             }

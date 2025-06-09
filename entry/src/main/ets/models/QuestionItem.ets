@@ -99,3 +99,9 @@ export enum SortType {
   ViewHigh = 21,
   Commend = 30
 }
+
+export interface QuestionItemParams{
+  item:QuestionItem,
+  list:QuestionItem[],
+  currentIndex:number
+}

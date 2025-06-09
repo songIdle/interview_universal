@@ -1,8 +1,8 @@
 import { HcNavBar } from '../commons/components/HcNavBar'
 import { HcTag } from '../commons/components/HcTag'
-import { router } from '@kit.ArkUI'
-import { QuestionItem } from '../models/QuestionItem'
-import { http } from '../commons/utils'
+import { promptAction, router } from '@kit.ArkUI'
+import { QuestionItem, QuestionItemParams } from '../models/QuestionItem'
+import { http, logger } from '../commons/utils'
 import { QuestionDetailModel } from '../models/QuestionDetailModel'
 import { webview } from '@kit.ArkWeb'
 import { HcLoadingDialog } from '../commons/components/HcLoadingDialog'
@@ -16,20 +16,39 @@ struct QuestionPage {
   @State
   item: Partial<QuestionDetailModel>={}
 
+  @State
+  questionList:QuestionItem[]=[]
+  currentIndex:number=0
+
   controller=new webview.WebviewController()
 
+  //通过new来创建一个加载弹窗
   dialog = new CustomDialogController({
     builder: HcLoadingDialog(),
     customStyle: true,
     alignment: DialogAlignment.Center,
   });
 
-  async aboutToAppear() {
+  aboutToAppear() :void{
+    const data=router.getParams() as QuestionItemParams
+    this.questionList=data.list
+    this.currentIndex=data.currentIndex
+    logger.debug('',JSON.stringify(this.questionList))
+    this.getDataDetail(data.item.id)
+  }
+
+  async getDataDetail(id:string){
     this.dialog.open()
-    const data=router.getParams() as Record<string,QuestionItem>
-    this.item=data.data
-    const res=await http.request<QuestionDetailModel>({url:`question/${this.item.id}`})
+    const res=await http.request<QuestionDetailModel>({url:`question/${id}`})
     this.item=res
+    //通过close和open操作dialog
+    this.dialog.close()
+
+    this.controller.runJavaScript(`writeHtml(\`${this.item.answer}\`)`)
+  }
+
+
+  onPageHide(): void {
     this.dialog.close()
   }
 
@@ -65,7 +84,7 @@ struct QuestionPage {
       HcNavBar({ title: '试题详情', showRightIcon: false })
       // 题目
       this.TitleBuilder('题目：')
-      Text(this.item.stem)
+      Text(''+this.item.stem)
         .width('100%')
         .padding(16)
         .maxLines(2)
@@ -105,6 +124,14 @@ struct QuestionPage {
             .fillColor($r('app.color.common_gray_01'))
           Text(' 上一题')
             .fontColor($r('app.color.common_gray_01'))
+            .onClick(() => {
+              if (this.currentIndex==0){
+                promptAction.showToast({message:'已经是第一个啦'})
+                return
+              }
+              this.currentIndex--
+              this.getDataDetail(this.questionList[this.currentIndex].id)
+            })
         }
 
         Row() {
@@ -114,6 +141,14 @@ struct QuestionPage {
             .width(20)
             .aspectRatio(1)
             .fillColor($r('app.color.common_gray_03'))
+            .onClick(()=>{
+              if (this.currentIndex+1==this.questionList.length){
+                promptAction.showToast({message:'已经是最后一个啦'})
+                return
+              }
+              this.currentIndex++
+              this.getDataDetail(this.questionList[this.currentIndex].id)
+            })
         }
       }
       .height(44)
