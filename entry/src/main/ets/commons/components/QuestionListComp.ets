@@ -35,7 +35,9 @@ export struct QuestionListComp {
             ListItem() {
               QuestionItemComp({data:item})
                 .onClick(()=>{
-                  auth.checkAuth({url:'pages/QuestionDetailPage'})
+                  auth.checkAuth({url:'pages/QuestionDetailPage',params:{
+                    data:item
+                  }})
                 })
             }
           })
