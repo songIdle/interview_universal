@@ -3,6 +3,8 @@ import { promptAction, router } from '@kit.ArkUI'
 import { LoginParams, User } from '../models/User'
 import { http } from '../commons/utils/Http'
 import { auth } from '../commons/utils/AuthUtils'
+import { emitter } from '@kit.BasicServicesKit'
+import { LOGIN_EVENT } from '../commons/constants'
 
 
 @Entry
@@ -45,6 +47,7 @@ struct LoginPage {
       })
       this.loading = false
       auth.setUser(user)
+      emitter.emit(LOGIN_EVENT)
       router.back()
     } catch (err) {
       this.loading = false

@@ -5,6 +5,8 @@ import { QuestionListComp } from "../../commons/components/QuestionListComp"
 import { http } from "../../commons/utils/Http"
 import { SortType } from "../../models/QuestionItem"
 import { QuestionType } from "../../models/QuestionType"
+import { emitter } from "@kit.BasicServicesKit"
+import { LOGIN_EVENT } from "../../commons/constants"
 
 @Component
 export struct HomeCategory {
@@ -16,6 +18,14 @@ export struct HomeCategory {
   @State sort:SortType=SortType.Default
 
   async aboutToAppear() {
+    this.getTypeList()
+    emitter.on(LOGIN_EVENT, () => {
+      this.getTypeList()
+    })
+
+  }
+
+  async getTypeList(){
     const res=await http.request<QuestionType[]>({
       url:'question/type'
     })
