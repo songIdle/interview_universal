@@ -11,7 +11,8 @@ import { QuestionShareDialog } from '../views/question/QuestionShareDialog'
 @Entry
 @Component
 struct QuestionPage {
-  @StorageProp('bottomHeight') bottomHeight: number = 0
+  @StorageProp('navigationHeight')
+  bottomHeight: number = 0
 
   @State
   item: Partial<QuestionItem>={}
@@ -44,9 +45,14 @@ struct QuestionPage {
   }
 
   async getDataDetail(id:string){
+    if (this.item.answer) {
+      this.controller.runJavaScript(`writeHtml(\`${this.item.answer}\`)`)
+      return
+    }
     this.dialog.open()
     const res=await http.request<QuestionItem>({url:`question/${id}`})
     this.item=res
+    this.questionList[this.currentIndex]=res
     //通过close和open操作dialog
     this.dialog.close()
 
@@ -133,15 +139,16 @@ struct QuestionPage {
             .fillColor($r('app.color.common_gray_01'))
           Text(' 上一题')
             .fontColor($r('app.color.common_gray_01'))
-            .onClick(() => {
-              if (this.currentIndex==0){
-                promptAction.showToast({message:'已经是第一个啦'})
-                return
-              }
-              this.currentIndex--
-              this.getDataDetail(this.questionList[this.currentIndex].id)
-            })
         }
+        .onClick(() => {
+          if (this.currentIndex==0){
+            promptAction.showToast({message:'已经是第一个啦'})
+            return
+          }
+          this.currentIndex--
+          this.item=this.questionList[this.currentIndex]
+          this.getDataDetail(this.questionList[this.currentIndex].id)
+        })
 
         Row() {
           Text('下一题 ')
@@ -150,15 +157,17 @@ struct QuestionPage {
             .width(20)
             .aspectRatio(1)
             .fillColor($r('app.color.common_gray_03'))
-            .onClick(()=>{
-              if (this.currentIndex+1==this.questionList.length){
-                promptAction.showToast({message:'已经是最后一个啦'})
-                return
-              }
-              this.currentIndex++
-              this.getDataDetail(this.questionList[this.currentIndex].id)
-            })
+
         }
+        .onClick(()=>{
+          if (this.currentIndex+1==this.questionList.length){
+            promptAction.showToast({message:'已经是最后一个啦'})
+            return
+          }
+          this.currentIndex++
+          this.item=this.questionList[this.currentIndex]
+          this.getDataDetail(this.questionList[this.currentIndex].id)
+        })
       }
       .height(44)
       .width('100%')
