@@ -3,7 +3,6 @@ import { HcTag } from '../commons/components/HcTag'
 import { promptAction, router } from '@kit.ArkUI'
 import { QuestionItem, QuestionItemParams } from '../models/QuestionItem'
 import { http, logger } from '../commons/utils'
-import { QuestionDetailModel } from '../models/QuestionDetailModel'
 import { webview } from '@kit.ArkWeb'
 import { HcLoadingDialog } from '../commons/components/HcLoadingDialog'
 import { QuestionShareDialog } from '../views/question/QuestionShareDialog'
@@ -15,7 +14,7 @@ struct QuestionPage {
   @StorageProp('bottomHeight') bottomHeight: number = 0
 
   @State
-  item: Partial<QuestionDetailModel>={}
+  item: Partial<QuestionItem>={}
 
   @State
   questionList:QuestionItem[]=[]
@@ -31,7 +30,7 @@ struct QuestionPage {
   });
 
   shareDialog = new CustomDialogController({
-    builder: QuestionShareDialog({ item: this.item as QuestionDetailModel}),
+    builder: QuestionShareDialog({ item: this.item as QuestionItem}),
     customStyle: true,
     alignment: DialogAlignment.Center,
   });
@@ -46,7 +45,7 @@ struct QuestionPage {
 
   async getDataDetail(id:string){
     this.dialog.open()
-    const res=await http.request<QuestionDetailModel>({url:`question/${id}`})
+    const res=await http.request<QuestionItem>({url:`question/${id}`})
     this.item=res
     //通过close和open操作dialog
     this.dialog.close()

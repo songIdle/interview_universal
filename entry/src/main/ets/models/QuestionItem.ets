@@ -80,7 +80,45 @@ export interface QuestionItem {
    * 浏览量
    */
   views: number;
+  /**
+   * 题目答案
+   */
+  answer: string;
+  /**
+   * 0未收藏1收藏
+   */
+  collectFlag: number;
+  /**
+   * 关联问题：面经才有关联问题
+   */
+  relatedQuestions?: RelatedQuestion[];
+  /**
+   * 阶段待定-知识点
+   */
+  stage?: string[];
 }
+
+
+
+export interface RelatedQuestion {
+  /**
+   * 入库时间
+   */
+  createdAt?: string;
+  /**
+   * 题目id
+   */
+  id: string;
+  /**
+   * 题号/面经的标题
+   */
+  questionNo?: string;
+  /**
+   * 题干
+   */
+  stem: string;
+}
+
 
 export enum PlanSceneName {
   Empty = "",

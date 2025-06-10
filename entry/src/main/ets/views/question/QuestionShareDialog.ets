@@ -1,15 +1,15 @@
 import { logger, USER_INFO } from "../../commons/utils"
-import { QuestionDetailModel } from "../../models/QuestionDetailModel"
 import { User } from "../../models/User"
 import { componentSnapshot, promptAction } from "@kit.ArkUI"
 import image from "@ohos.multimedia.image"
 import { fileIo, fileUri } from "@kit.CoreFileKit"
 import { photoAccessHelper } from "@kit.MediaLibraryKit"
+import { QuestionItem } from "../../models/QuestionItem"
 
 
 @CustomDialog
 export struct QuestionShareDialog {
-  @Prop item: QuestionDetailModel
+  @Prop item: QuestionItem
   @StorageProp(USER_INFO) user: User = {} as User
 
   controller: CustomDialogController

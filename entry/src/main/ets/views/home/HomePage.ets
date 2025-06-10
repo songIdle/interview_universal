@@ -1,6 +1,10 @@
 import { ClockInIcon } from "../../commons/components/ClockInIcon"
 import { HomeCategory } from "./HomeCategory"
 import { SearchBox } from "../../commons/components/SearchBox"
+import { scanBarcode } from "@kit.ScanKit"
+import { auth, http } from "../../commons/utils"
+import { promptAction, router } from "@kit.ArkUI"
+import { QuestionItem } from "../../models/QuestionItem"
 
 @Component
 export struct HomePage{
@@ -12,6 +16,28 @@ export struct HomePage{
         Image($r('app.media.ic_home_scan'))
           .width(24)
           .aspectRatio(1)
+          .onClick(async ()=>{
+            if (canIUse('SystemCapability.Multimedia.Scan.ScanBarcode')){
+              const res=await scanBarcode.startScanForResult(getContext())
+
+              if (res.originalValue) {
+                try {
+                  const item = await http.request<QuestionItem>({ url: `question/${res.originalValue}` })
+                  router.pushUrl({
+                    url: 'pages/QuestionPage',
+                    params: {
+                      item,
+                      list: [item],
+                      index:0
+                    }
+                  })
+                } catch (e) {
+                  promptAction.showToast({ message: '没有找到试题' })
+                }
+
+              }
+            }
+          })
         Blank()
         SearchBox({layoutWeightValue:1})
         ClockInIcon({clockInCount:8})
