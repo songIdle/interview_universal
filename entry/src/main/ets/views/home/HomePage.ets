@@ -16,29 +16,34 @@ export struct HomePage{
     tracking.report(true)
   }
 
+  async startToScan(){
+    if (canIUse('SystemCapability.Multimedia.Scan.ScanBarcode')){
+      const res=await scanBarcode.startScanForResult(getContext())
+
+      if (res.originalValue) {
+        try {
+          const item = await http.request<QuestionItem>({ url: `question/${res.originalValue}` })
+          router.pushUrl({
+            url: 'pages/QuestionPage',
+            params: { item, list: [item], index:0 }
+          })
+        } catch (e) {
+          promptAction.showToast({ message: '没有找到试题' })
+        }
+      }
+    }
+  }
+
   build() {
     Column() {
       Row({ space: 16 }) {
         Image($r('app.media.ic_home_scan'))
           .width(24)
           .aspectRatio(1)
-          .onClick(async ()=>{
-            if (canIUse('SystemCapability.Multimedia.Scan.ScanBarcode')){
-              const res=await scanBarcode.startScanForResult(getContext())
-
-              if (res.originalValue) {
-                try {
-                  const item = await http.request<QuestionItem>({ url: `question/${res.originalValue}` })
-                  router.pushUrl({
-                    url: 'pages/QuestionPage',
-                    params: { item, list: [item], index:0 }
-                  })
-                } catch (e) {
-                  promptAction.showToast({ message: '没有找到试题' })
-                }
-
-              }
-            }
+          .onClick(()=>{
+            auth.checkLogin(()=>{
+              this.startToScan()
+            })
           })
         Blank()
         SearchBox({layoutWeightValue:1})

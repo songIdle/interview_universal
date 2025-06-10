@@ -21,6 +21,13 @@ export class Auth{
       router.pushUrl({url:'pages/LoginPage',params:options})
     }
   }
+  checkLogin(event:()=>void){
+    if(this.getUser().token) {
+      event()
+    }else {
+      router.pushUrl({url:'pages/LoginPage'})
+    }
+  }
 }
 
 export const auth=new Auth()
