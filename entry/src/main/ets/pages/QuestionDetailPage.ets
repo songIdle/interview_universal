@@ -6,6 +6,7 @@ import { http, logger } from '../commons/utils'
 import { QuestionDetailModel } from '../models/QuestionDetailModel'
 import { webview } from '@kit.ArkWeb'
 import { HcLoadingDialog } from '../commons/components/HcLoadingDialog'
+import { QuestionShareDialog } from '../views/question/QuestionShareDialog'
 
 
 @Entry
@@ -25,6 +26,12 @@ struct QuestionPage {
   //通过new来创建一个加载弹窗
   dialog = new CustomDialogController({
     builder: HcLoadingDialog(),
+    customStyle: true,
+    alignment: DialogAlignment.Center,
+  });
+
+  shareDialog = new CustomDialogController({
+    builder: QuestionShareDialog({ item: this.item as QuestionDetailModel}),
     customStyle: true,
     alignment: DialogAlignment.Center,
   });
@@ -75,6 +82,9 @@ struct QuestionPage {
       MenuItem({ content: '收藏' })
       MenuItem({ content: '点我反馈' })
       MenuItem({ content: '试题分享' })
+        .onClick(() => {
+          this.shareDialog.open()
+        })
     }
     .width(108)
   }
