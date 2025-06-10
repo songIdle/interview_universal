@@ -3,7 +3,7 @@ import { TimeItem } from "../../models/TimeItem";
 import { preferences } from "@kit.ArkData";
 
 
-class Tracking {
+export class Tracking {
   store: preferences.Preferences|null=null
   dataKey: string = "time-list";
   getPre(){

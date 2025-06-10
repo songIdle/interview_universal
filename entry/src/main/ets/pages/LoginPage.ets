@@ -5,6 +5,7 @@ import { http } from '../commons/utils/Http'
 import { auth } from '../commons/utils/AuthUtils'
 import { emitter } from '@kit.BasicServicesKit'
 import { LOGIN_EVENT } from '../commons/constants'
+import { tracking } from '../commons/utils'
 
 
 @Entry
@@ -46,9 +47,12 @@ struct LoginPage {
         }
       })
       this.loading = false
+      //保存用户信息
       auth.setUser(user)
+      //通过广播事件同步登录状态
       emitter.emit(LOGIN_EVENT)
-
+      //上报数据
+      tracking.report(true)
       const params=router.getParams() as router.RouterOptions
       if ( params) {
         router.replaceUrl(params)

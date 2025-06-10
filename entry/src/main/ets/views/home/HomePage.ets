@@ -2,7 +2,7 @@ import { ClockInIcon } from "../../commons/components/ClockInIcon"
 import { HomeCategory } from "./HomeCategory"
 import { SearchBox } from "../../commons/components/SearchBox"
 import { scanBarcode } from "@kit.ScanKit"
-import { auth, http } from "../../commons/utils"
+import { auth, http, tracking } from "../../commons/utils"
 import { promptAction, router } from "@kit.ArkUI"
 import { QuestionItem } from "../../models/QuestionItem"
 
@@ -10,6 +10,12 @@ import { QuestionItem } from "../../models/QuestionItem"
 export struct HomePage{
   @StorageProp('statusBarHeight')
   statusBarHeight:number=0
+
+
+  aboutToAppear(): void {
+    tracking.report(true)
+  }
+
   build() {
     Column() {
       Row({ space: 16 }) {
@@ -25,11 +31,7 @@ export struct HomePage{
                   const item = await http.request<QuestionItem>({ url: `question/${res.originalValue}` })
                   router.pushUrl({
                     url: 'pages/QuestionPage',
-                    params: {
-                      item,
-                      list: [item],
-                      index:0
-                    }
+                    params: { item, list: [item], index:0 }
                   })
                 } catch (e) {
                   promptAction.showToast({ message: '没有找到试题' })

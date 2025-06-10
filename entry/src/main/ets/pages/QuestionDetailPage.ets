@@ -2,7 +2,7 @@ import { HcNavBar } from '../commons/components/HcNavBar'
 import { HcTag } from '../commons/components/HcTag'
 import { promptAction, router } from '@kit.ArkUI'
 import { QuestionItem, QuestionItemParams } from '../models/QuestionItem'
-import { http, logger } from '../commons/utils'
+import { http, logger, tracking } from '../commons/utils'
 import { webview } from '@kit.ArkWeb'
 import { HcLoadingDialog } from '../commons/components/HcLoadingDialog'
 import { QuestionShareDialog } from '../views/question/QuestionShareDialog'
@@ -17,6 +17,7 @@ struct QuestionPage {
   @State
   item: Partial<QuestionItem>={}
 
+  startTime:number=0
   @State
   questionList:QuestionItem[]=[]
   currentIndex:number=0
@@ -59,9 +60,14 @@ struct QuestionPage {
     this.controller.runJavaScript(`writeHtml(\`${this.item.answer}\`)`)
   }
 
+  onPageShow(): void {
+    this.startTime=Date.now()
+  }
 
   onPageHide(): void {
     this.dialog.close()
+    tracking.record(this.startTime,Date.now(),this.item.id+'')
+    tracking.report()
   }
 
   @Builder
@@ -145,6 +151,12 @@ struct QuestionPage {
             promptAction.showToast({message:'已经是第一个啦'})
             return
           }
+
+          //记录用户行为
+          tracking.record(this.startTime,Date.now(),this.item.id+'')
+          tracking.report()
+          this.startTime=Date.now()
+
           this.currentIndex--
           this.item=this.questionList[this.currentIndex]
           this.getDataDetail(this.questionList[this.currentIndex].id)
@@ -164,6 +176,12 @@ struct QuestionPage {
             promptAction.showToast({message:'已经是最后一个啦'})
             return
           }
+
+          //记录用户行为
+          tracking.record(this.startTime,Date.now(),this.item.id+'')
+          tracking.report()
+          this.startTime=Date.now()
+
           this.currentIndex++
           this.item=this.questionList[this.currentIndex]
           this.getDataDetail(this.questionList[this.currentIndex].id)
