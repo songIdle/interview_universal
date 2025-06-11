@@ -24,7 +24,7 @@ export struct HomePage{
         try {
           const item = await http.request<QuestionItem>({ url: `question/${res.originalValue}` })
           router.pushUrl({
-            url: 'pages/QuestionPage',
+            url: 'pages/QuestionDetailPage',
             params: { item, list: [item], index:0 }
           })
         } catch (e) {

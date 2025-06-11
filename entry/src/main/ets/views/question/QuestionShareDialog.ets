@@ -54,17 +54,8 @@ export struct QuestionShareDialog {
           .onClick((event,result) => {
             if (result==SaveButtonOnClickResult.SUCCESS) {
               this.saveImageTo()
-
             }
-
           })
-        // Text('保存到本地')
-        //   .fontColor($r('app.color.white'))
-        //   .fontSize(14)
-        //   .padding(12)
-        //   .backgroundColor($r('app.color.common_main_color'))
-        //   .onClick(async () => {
-        //   })
       }
       .borderRadius({ topLeft: 8 })
       .clip(true)
@@ -76,13 +67,17 @@ export struct QuestionShareDialog {
   async saveImageTo(){
     const res=await componentSnapshot.get('share')
 
+    // const imageBuffer=await packer.packing(res,{format:'image/jpeg',quality:70})
+    // const filePath=getContext().cacheDir+'/'+Date.now()+'.jpeg'
+    // const file=fileIo.openSync(filePath,fileIo.OpenMode.CREATE|fileIo.OpenMode.READ_WRITE)
+    // fileIo.writeSync(file.fd,imageBuffer)
+    // fileIo.closeSync(file.fd)
+    // promptAction.showToast({message:'缓存成功'})
+
     const packer=image.createImagePacker()
-    const imageBuffer=await packer.packing(res,{format:'image/jpeg',quality:70})
     const filePath=getContext().cacheDir+'/'+Date.now()+'.jpeg'
     const file=fileIo.openSync(filePath,fileIo.OpenMode.CREATE|fileIo.OpenMode.READ_WRITE)
-    fileIo.writeSync(file.fd,imageBuffer)
-    fileIo.closeSync(file.fd)
-    // promptAction.showToast({message:'缓存成功'})
+    await packer.packToFile(res,file.fd,{format:'image/jpeg',quality:70})
 
     const uri=fileUri.getUriFromPath(filePath)
     const request=photoAccessHelper.MediaAssetChangeRequest.createImageAssetRequest(getContext(),uri)
