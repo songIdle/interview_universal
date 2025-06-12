@@ -1,7 +1,7 @@
 import { HcNavBar } from '../commons/components/HcNavBar'
 import { promptAction, router } from '@kit.ArkUI'
 import { LoginParams, User } from '../models/User'
-import { http } from '../commons/utils/Http'
+import { httpUtil } from '../commons/utils/Http'
 import { auth } from '../commons/utils/AuthUtils'
 import { emitter } from '@kit.BasicServicesKit'
 import { LOGIN_EVENT } from '../commons/constants'
@@ -38,7 +38,7 @@ struct LoginPage {
 
     try {
       this.loading = true
-      const user = await http.requestWithData<User, LoginParams>({
+      const user = await httpUtil.requestWithData<User, LoginParams>({
         url: 'login',
         method: 'post',
         data: {

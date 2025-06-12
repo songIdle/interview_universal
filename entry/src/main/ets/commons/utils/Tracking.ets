@@ -1,4 +1,4 @@
-import { http, logger } from ".";
+import { httpUtil, logger } from ".";
 import { TimeItem } from "../../models/TimeItem";
 import { preferences } from "@kit.ArkData";
 
@@ -27,7 +27,7 @@ export class Tracking {
     const json = this.getPre().getSync(this.dataKey, "[]");
     const list = JSON.parse(json as string) as TimeItem[];
     if (list.length >= 5||(force && list.length)) {
-      await http.request<null>({ url: "time/tracking", method: "post", data: { timeList: list } });
+      await httpUtil.request<null>({ url: "time/tracking", method: "post", data: { timeList: list } });
       this.getPre().deleteSync(this.dataKey);
       await this.getPre().flush();
     }

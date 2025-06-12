@@ -1,6 +1,6 @@
 import { QuestionItem, QuestionListType, SortType } from "../../models/QuestionItem"
 import { auth } from "../utils"
-import { http } from "../utils/Http"
+import { httpUtil } from "../utils/Http"
 import { QuestionItemComp } from "./QuestionItemComp"
 import { Skeleton } from "./Skeleton"
 import { SkeletonItem } from "./SkeletonItem"
@@ -109,7 +109,7 @@ export struct QuestionListComp {
   }
 
   async getListData(){
-    return await http.request<QuestionListType>({
+    return await httpUtil.request<QuestionListType>({
       url:'question/list',
       params:{
         questionBankType:10,

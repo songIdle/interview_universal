@@ -2,15 +2,17 @@ import { ClockInIcon } from "../../commons/components/ClockInIcon"
 import { HomeCategory } from "./HomeCategory"
 import { SearchBox } from "../../commons/components/SearchBox"
 import { scanBarcode } from "@kit.ScanKit"
-import { auth, http, tracking } from "../../commons/utils"
+import { auth, httpUtil, requestClock, tracking, USER_INFO } from "../../commons/utils"
 import { promptAction, router } from "@kit.ArkUI"
 import { QuestionItem } from "../../models/QuestionItem"
+import { User } from "../../models/User"
 
 @Component
 export struct HomePage{
   @StorageProp('statusBarHeight')
   statusBarHeight:number=0
-
+  @StorageProp(USER_INFO)
+  user: User = {} as User
 
   aboutToAppear(): void {
     tracking.report(true)
@@ -22,7 +24,7 @@ export struct HomePage{
 
       if (res.originalValue) {
         try {
-          const item = await http.request<QuestionItem>({ url: `question/${res.originalValue}` })
+          const item = await httpUtil.request<QuestionItem>({ url: `question/${res.originalValue}` })
           router.pushUrl({
             url: 'pages/QuestionDetailPage',
             params: { item, list: [item], index:0 }
@@ -46,13 +48,17 @@ export struct HomePage{
             })
           })
         Blank()
-        SearchBox({layoutWeightValue:1})
+        SearchBox()
+          .layoutWeight(1)
           .onClick(() => {
             router.pushUrl({
               url: 'pages/SearchPage'
             })
           })
-        ClockInIcon({clockInCount:8})
+        ClockInIcon({clockInCount:this.user.clockinNumbers??0})
+          .onClick(()=>{
+            requestClock()
+          })
       }
       .padding({ left: 16, right: 16 })
       .height(64)

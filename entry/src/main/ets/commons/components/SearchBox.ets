@@ -1,11 +1,9 @@
 @Component
 export struct SearchBox {
-  @Prop boxWidth: Length = 100
   @Prop boxHeight: number = 32
   @Prop ph: ResourceStr = '搜索题目'
   @Prop phColor: ResourceColor = $r('app.color.common_gray_02')
   @Prop bgColor: ResourceColor = $r('app.color.common_gray_border')
-  @Prop layoutWeightValue: number = 0
 
   build() {
     Row({ space: 4 }){
@@ -17,11 +15,10 @@ export struct SearchBox {
         .fontSize(14)
         .fontColor(this.phColor)
     }
-    .width(this.boxWidth)
+    .width('100%')
     .height(this.boxHeight)
     .backgroundColor(this.bgColor)
     .borderRadius(this.boxHeight / 2)
     .justifyContent(FlexAlign.Center)
-    .layoutWeight(this.layoutWeightValue)
   }
 }

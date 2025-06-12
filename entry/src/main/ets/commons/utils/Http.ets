@@ -46,5 +46,5 @@ export class HttpUtils{
   }
 }
 
-export const http=new HttpUtils()
+export const httpUtil=new HttpUtils()
 

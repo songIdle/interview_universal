@@ -2,7 +2,7 @@ import { HcNavBar } from '../commons/components/HcNavBar'
 import { HcTag } from '../commons/components/HcTag'
 import { promptAction, router } from '@kit.ArkUI'
 import { QuestionItem, QuestionItemParams } from '../models/QuestionItem'
-import { http, logger, tracking } from '../commons/utils'
+import { httpUtil, logger, tracking } from '../commons/utils'
 import { webview } from '@kit.ArkWeb'
 import { HcLoadingDialog } from '../commons/components/HcLoadingDialog'
 import { QuestionShareDialog } from '../views/question/QuestionShareDialog'
@@ -51,7 +51,7 @@ struct QuestionPage {
       return
     }
     this.dialog.open()
-    const res=await http.request<QuestionItem>({url:`question/${id}`})
+    const res=await httpUtil.request<QuestionItem>({url:`question/${id}`})
     this.item=res
     this.questionList[this.currentIndex]=res
     //通过close和open操作dialog

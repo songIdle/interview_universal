@@ -2,7 +2,7 @@ import { FilterButton } from "../../commons/components/FilterButton"
 import { HcTag } from "../../commons/components/HcTag"
 import { QuestionItemComp } from "../../commons/components/QuestionItemComp"
 import { QuestionListComp } from "../../commons/components/QuestionListComp"
-import { http } from "../../commons/utils/Http"
+import { httpUtil } from "../../commons/utils/Http"
 import { SortType } from "../../models/QuestionItem"
 import { QuestionType } from "../../models/QuestionType"
 import { emitter } from "@kit.BasicServicesKit"
@@ -26,7 +26,7 @@ export struct HomeCategory {
   }
 
   async getTypeList(){
-    const res=await http.request<QuestionType[]>({
+    const res=await httpUtil.request<QuestionType[]>({
       url:'question/type'
     })
     this.questionTypeList=res

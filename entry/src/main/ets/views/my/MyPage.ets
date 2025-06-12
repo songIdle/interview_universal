@@ -1,7 +1,7 @@
 
-import { router } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 import { ClockInIcon } from '../../commons/components/ClockInIcon'
-import { dateUtils, statusBar, USER_INFO } from '../../commons/utils'
+import { auth, dateUtils, httpUtil, HttpUtils, requestClock, statusBar, USER_INFO } from '../../commons/utils'
 import { User } from '../../models/User'
 
 interface Nav {
@@ -135,7 +135,10 @@ export struct MyPage {
             })
         }
 
-        ClockInIcon({ clockInCount: 10 })
+        ClockInIcon({ clockInCount: this.user.clockinNumbers??0 })
+          .onClick(() => {
+            requestClock()
+          })
       }
       .width('100%')
       .height(100)
