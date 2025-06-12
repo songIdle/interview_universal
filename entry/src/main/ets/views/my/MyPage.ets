@@ -165,7 +165,7 @@ export struct MyPage {
           name: '累计学时',
           other: dateUtils.formatTime(this.user.totalTime),
           onClick: () => {
-            // TODO
+            auth.checkAuth({url:'pages/StudyTimePage'})
           }
         })
       }

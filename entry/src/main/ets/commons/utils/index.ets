@@ -7,3 +7,8 @@ export * from './Http'
 export * from './AuthUtils'
 export * from './Tracking'
 export * from './History'
+
+
+export const calcPercentage = (done: number, total: number) => {
+  return Math.round(done / total * 100) + '%'
+}
