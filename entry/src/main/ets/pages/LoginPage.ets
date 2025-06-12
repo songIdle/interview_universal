@@ -11,7 +11,7 @@ import { tracking } from '../commons/utils'
 @Entry
 @Component
 struct LoginPage {
-  @StorageProp('topHeight')
+  @StorageProp('statusBarHeight')
   topHeight: number = 0
   @State
   username: string = 'hmheima'
