@@ -65,6 +65,8 @@ export struct QuestionShareDialog {
   }
 
   async saveImageTo(){
+    //componentSnapshot用来给组件截图  share 是组件的id
+    //res 的类型是 image.PixelMap
     const res=await componentSnapshot.get('share')
 
     // const imageBuffer=await packer.packing(res,{format:'image/jpeg',quality:70})
@@ -74,14 +76,18 @@ export struct QuestionShareDialog {
     // fileIo.closeSync(file.fd)
     // promptAction.showToast({message:'缓存成功'})
 
+    //new ImagePacker()
     const packer=image.createImagePacker()
     const filePath=getContext().cacheDir+'/'+Date.now()+'.jpeg'
     const file=fileIo.openSync(filePath,fileIo.OpenMode.CREATE|fileIo.OpenMode.READ_WRITE)
     await packer.packToFile(res,file.fd,{format:'image/jpeg',quality:70})
 
+    //创建相册图片的请求（uri：代号）
     const uri=fileUri.getUriFromPath(filePath)
     const request=photoAccessHelper.MediaAssetChangeRequest.createImageAssetRequest(getContext(),uri)
+    //new photoAccessHelper()
     const helper=photoAccessHelper.getPhotoAccessHelper(getContext())
+    //request必须用在applyChanges里面
     await helper.applyChanges(request)
     promptAction.showToast({message:'保存进相册成功'})
     this.controller.close()
