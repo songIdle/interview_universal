@@ -20,6 +20,8 @@ export struct QuestionListComp {
   isFinished :boolean=false
 
   pageNum:number=1
+  @Prop
+  keyword:string=''
 
   fn(){
     this.isRefreshing=true
@@ -114,7 +116,8 @@ export struct QuestionListComp {
         type:this.typeId,
         pageSize:10,
         page:this.pageNum,
-        sort:this.sortType
+        sort:this.sortType,
+        keyword:this.keyword
       }
     })
   }

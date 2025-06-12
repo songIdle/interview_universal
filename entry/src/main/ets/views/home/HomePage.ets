@@ -47,6 +47,11 @@ export struct HomePage{
           })
         Blank()
         SearchBox({layoutWeightValue:1})
+          .onClick(() => {
+            router.pushUrl({
+              url: 'pages/SearchPage'
+            })
+          })
         ClockInIcon({clockInCount:8})
       }
       .padding({ left: 16, right: 16 })
