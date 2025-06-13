@@ -179,7 +179,9 @@ export struct MyPage {
             auth.checkAuth({url:'pages/WordPage'})
           }
         })
-        this.toolsBuilder({ icon: $r('app.media.ic_mine_ai'), name: '面通AI' })
+        this.toolsBuilder({ icon: $r('app.media.ic_mine_ai'), name: '面通录音',onClick: () => {
+          router.pushUrl({ url: 'pages/RecordPage' })
+        } })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_invite'), name: '推荐分享' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_file'), name: '意见反馈' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_info'), name: '关于我们' })
