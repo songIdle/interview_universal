@@ -3,6 +3,7 @@ import { util } from '@kit.ArkTS'
 import { WordItem, Words } from '../models/WordItem'
 import { promptAction } from '@kit.ArkUI'
 import { webview } from '@kit.ArkWeb'
+import { WordDialog } from '../views/my/WordDialog'
 
 @Entry
 @Component
@@ -14,7 +15,13 @@ struct WordPage {
   @State currentCode: string = ''
   webController = new webview.WebviewController()
   @State showCodeSheet: boolean = false
-
+  @State currentEn: string = ''
+  @State currentZh: string = ''
+  wordReadDialog = new CustomDialogController({
+    builder: WordDialog({ en: this.currentEn, zh: this.currentZh }),
+    customStyle: true,
+    alignment: DialogAlignment.Center
+  })
 
   aboutToAppear(): void {
     const res =getContext().resourceManager.getRawFileContentSync('word.json')
@@ -82,6 +89,11 @@ struct WordPage {
                 .aspectRatio(1)
                 .alignSelf(ItemAlign.Start)
                 .fillColor($r('app.color.common_gray_03'))
+                .onClick(() => {
+                  this.currentEn = item.en
+                  this.currentZh = item.zh
+                  this.wordReadDialog.open()
+                })
               Column({ space: 10 }) {
                 Text(item.en)
                   .fontWeight(FontWeight.Bold)
